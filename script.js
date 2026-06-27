@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnBurstConfetti = document.getElementById('btn-burst-confetti');
     const btnSpawnBalloons = document.getElementById('btn-spawn-balloons');
     const balloonContainer = document.getElementById('balloon-container');
+    const progressBar = document.getElementById('music-progress-bar');
     
     // Cake & Candles variables
     const candles = document.querySelectorAll('.candle');
@@ -45,6 +46,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const src = card.getAttribute('data-src');
         galleryImages.push(src);
         card.addEventListener('click', () => openLightbox(index));
+    });
+
+    // --- EFECTO DE DESTELLOS DE RATÓN (SPARKLES) ---
+    let lastSparkleTime = 0;
+    document.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastSparkleTime < 50) return; // Limitar a un destello cada 50ms para rendimiento
+        lastSparkleTime = now;
+        
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle-trail';
+        sparkle.style.left = `${e.clientX}px`;
+        sparkle.style.top = `${e.clientY}px`;
+        
+        const size = Math.random() * 6 + 4;
+        sparkle.style.width = `${size}px`;
+        sparkle.style.height = `${size}px`;
+        
+        document.body.appendChild(sparkle);
+        
+        sparkle.addEventListener('animationend', () => {
+            sparkle.remove();
+        });
     });
 
     // --- SISTEMA DE CONFETI EN CANVAS ---
@@ -166,7 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     });
 
-    // --- CONTROL DE AUDIO/MÚSICA ---
+    // --- CONTROL DE AUDIO/MÚSICA CON LÍMITE DE 3 MINUTOS ---
+    const MUSIC_LIMIT_SECONDS = 180; // 3 minutos
+
     function playMusic() {
         bgMusic.play().then(() => {
             isPlaying = true;
@@ -189,10 +215,35 @@ document.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
     }
 
+    // Monitoreo del tiempo de la música y actualización de la barra de progreso
+    bgMusic.addEventListener('timeupdate', () => {
+        const currentTime = bgMusic.currentTime;
+        
+        // Calcular porcentaje en base al límite de 3 minutos
+        const progressPercent = Math.min((currentTime / MUSIC_LIMIT_SECONDS) * 100, 100);
+        if (progressBar) {
+            progressBar.style.width = `${progressPercent}%`;
+        }
+
+        // Si sobrepasa los 3 minutos (180 segundos), detener la reproducción
+        if (currentTime >= MUSIC_LIMIT_SECONDS) {
+            pauseMusic();
+            bgMusic.currentTime = 0;
+            if (progressBar) {
+                progressBar.style.width = '0%';
+            }
+            document.querySelector('.music-status').textContent = 'Terminado (3 min)';
+        }
+    });
+
     btnTogglePlay.addEventListener('click', () => {
         if (isPlaying) {
             pauseMusic();
         } else {
+            // Si ya terminó y se reinició
+            if (bgMusic.currentTime >= MUSIC_LIMIT_SECONDS) {
+                bgMusic.currentTime = 0;
+            }
             playMusic();
         }
     });
@@ -232,33 +283,26 @@ document.addEventListener('DOMContentLoaded', () => {
         balloon.style.backgroundColor = color;
         balloon.style.color = color;
         
-        // Posición horizontal y animación randomizada
-        const leftPos = Math.random() * 85 + 5; // Evitar bordes extremos
+        const leftPos = Math.random() * 85 + 5;
         balloon.style.left = `${leftPos}%`;
         
-        const speed = Math.random() * 4 + 6; // Entre 6 y 10 segundos
+        const speed = Math.random() * 4 + 6;
         balloon.style.animationDuration = `${speed}s`;
         
-        // Hilo
         const string = document.createElement('div');
         string.className = 'balloon-string';
         balloon.appendChild(string);
         
-        // Evento de hacer click (explotar el globo)
         balloon.addEventListener('click', (e) => {
             e.stopPropagation();
             
-            // Sonido de explosión visual (confeti del mismo color que el globo)
             const rect = balloon.getBoundingClientRect();
             const x = rect.left + rect.width / 2;
             const y = rect.top + rect.height / 2;
             burstConfetti(25, x, y, color);
-            
-            // Eliminar elemento del DOM
             balloon.remove();
         });
         
-        // Eliminar del DOM una vez que termina de flotar
         balloon.addEventListener('animationend', () => {
             balloon.remove();
         });
@@ -277,19 +321,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 candle.classList.add('extinguished');
                 extinguishedCount++;
                 
-                // Pequeña explosión de humo/confeti dorado arriba de la vela
                 const rect = candle.getBoundingClientRect();
                 const x = rect.left + rect.width / 2;
                 const y = rect.top;
                 burstConfetti(15, x, y, '#e2e8f0');
                 
-                // Validar si todas están apagadas
                 if (extinguishedCount === candles.length) {
                     cakeStatus.innerHTML = '🎉 ¡Felicidades! Pediste un deseo ✨';
                     cakeStatus.style.borderColor = 'var(--gold-primary)';
                     cakeStatus.style.color = 'var(--gold-light)';
                     
-                    // Celebración masiva de deseos cumplidos
                     setTimeout(() => {
                         const cakeRect = document.querySelector('.cake').getBoundingClientRect();
                         burstConfetti(100, cakeRect.left + cakeRect.width / 2, cakeRect.top);
@@ -308,7 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
             clickHint.innerHTML = '<i data-lucide="mail"></i> Haz clic en el sobre para guardar la carta';
             letterOpened = true;
             
-            // Explosión de confeti desde el sobre
             const rect = envelopeWrapper.getBoundingClientRect();
             burstConfetti(45, rect.left + rect.width / 2, rect.top + rect.height / 3);
         } else {
@@ -400,7 +440,6 @@ document.addEventListener('DOMContentLoaded', () => {
             observer.observe(item);
         });
         
-        // Animaciones iniciales secuenciales
         const heroItems = document.querySelectorAll('.hero-section .animate-item');
         heroItems.forEach((item, index) => {
             item.style.transitionDelay = `${index * 0.15}s`;

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños Maicol! - 22 Años</title>
+    <meta name="description" content="Una dedicatoria especial para Maicol Dias Gil en su cumpleaños 22. Amigo, compañero, esposo y padre. ¡Muchas felicidades!">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Canvas para el efecto de confeti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- PANTALLA DE BIENVENIDA (INTRO OVERLAY) -->
+    <div id="intro-overlay" class="intro-overlay">
+        <div class="intro-card">
+            <div class="envelope-icon">
+                <i data-lucide="mail-open" class="gold-icon pulse-animation"></i>
+            </div>
+            <h1 class="intro-title">Una Sorpresa Especial</h1>
+            <p class="intro-subtitle">Hemos preparado algo lindo para celebrar a un gran amigo.</p>
+            <button id="btn-entrar" class="btn-primary">
+                <span>Abrir Invitación</span>
+                <i data-lucide="sparkles"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- AUDIO DE FONDO -->
+    <audio id="bg-music" src="sonlas12.mp3" loop></audio>
+
+    <!-- REPRODUCTOR FLOTANTE DE MÚSICA -->
+    <div class="music-widget hidden" id="music-widget">
+        <div class="music-info">
+            <div class="music-disc-wrapper">
+                <div class="music-disc" id="music-disc">
+                    <i data-lucide="music"></i>
+                </div>
+            </div>
+            <div class="music-text">
+                <span class="music-title">Son las 12 - Feliz Cumpleaños</span>
+                <span class="music-status">Reproduciendo...</span>
+            </div>
+        </div>
+        <div class="music-controls">
+            <button id="btn-toggle-play" class="btn-icon" title="Pausar/Reproducir">
+                <i data-lucide="pause" id="play-icon"></i>
+            </button>
+            <div class="visualizer" id="visualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL (INICIALMENTE OCULTO HASTA CLIC EN ENTRAR) -->
+    <main id="main-content" class="hidden">
+        
+        <!-- SECCIÓN HERO -->
+        <section class="hero-section">
+            <div class="hero-glow"></div>
+            <div class="container hero-container">
+                <div class="hero-tag animate-item">
+                    <i data-lucide="cake"></i>
+                    <span>¡Hoy Cumple 22 Años!</span>
+                </div>
+                <h1 class="hero-title animate-item">Maicol Dias Gil</h1>
+                <p class="hero-subtitle animate-item">Compañero del colegio, gran amigo, esposo y padre. Celebrando un año más de vida y éxitos.</p>
+                
+                <div class="quick-facts animate-item">
+                    <div class="fact-card">
+                        <i data-lucide="graduation-cap"></i>
+                        <span>Amigo del Colegio</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="fact-divider"></i>
+                    <div class="fact-card">
+                        <i data-lucide="heart"></i>
+                        <span>Casado</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="fact-divider"></i>
+                    <div class="fact-card">
+                        <i data-lucide="baby"></i>
+                        <span>Padre</span>
+                    </div>
+                </div>
+
+                <div class="hero-cta animate-item">
+                    <a href="#historia" class="btn-secondary">
+                        <span>Ver Historia</span>
+                        <i data-lucide="arrow-down"></i>
+                    </a>
+                    <button class="btn-primary" id="btn-burst-confetti">
+                        <span>¡Lanzar Confeti!</span>
+                        <i data-lucide="party-popper"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE HISTORIA Y CAMINO -->
+        <section id="historia" class="history-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">El Camino Recorrido</h2>
+                    <p class="section-subtitle">Recordando los momentos que han marcado estos 22 años de vida de Maicol.</p>
+                </div>
+
+                <div class="timeline">
+                    <!-- Evento 1 -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="timeline-content card-glass">
+                            <span class="timeline-tag">La Amistad</span>
+                            <h3>El Compañero de Colegio</h3>
+                            <p>Compartimos las aulas, risas, exámenes y travesuras. Un amigo incondicional en el salón de clases, de esos que la escuela te regala para toda la vida.</p>
+                        </div>
+                    </div>
+
+                    <!-- Evento 2 -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot">
+                            <i data-lucide="award"></i>
+                        </div>
+                        <div class="timeline-content card-glass">
+                            <span class="timeline-tag">Compromiso</span>
+                            <h3>Un Nuevo Capítulo: El Matrimonio</h3>
+                            <p>El amor llegó para consolidar su camino. Tomó la decisión de dar un gran paso, casarse y empezar a construir un hogar sólido lleno de valores.</p>
+                        </div>
+                    </div>
+
+                    <!-- Evento 3 -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot">
+                            <i data-lucide="smile"></i>
+                        </div>
+                        <div class="timeline-content card-glass">
+                            <span class="timeline-tag">Bendición</span>
+                            <h3>El Regalo de Ser Padre</h3>
+                            <p>La llegada de su hijo transformó su mundo por completo. Un motor diario, una luz que inspira a Maicol a superarse cada día y ser su mejor versión.</p>
+                        </div>
+                    </div>
+
+                    <!-- Evento 4 -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot">
+                            <i data-lucide="cake-slice"></i>
+                        </div>
+                        <div class="timeline-content card-glass">
+                            <span class="timeline-tag">Hoy</span>
+                            <h3>¡Felices 22 Años!</h3>
+                            <p>Hoy celebra sus 22 años rodeado del cariño de su familia y la lealtad de sus amigos del colegio. ¡El futuro está lleno de oportunidades para seguir creciendo!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE GALERÍA DE FOTOS -->
+        <section id="galeria" class="gallery-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Galería de Recuerdos</h2>
+                    <p class="section-subtitle">Momentos capturados que reflejan su alegría, familia y amistad.</p>
+                </div>
+
+                <div class="gallery-grid">
+                    <div class="gallery-card" data-src="vv.jpg">
+                        <img src="vv.jpg" alt="Recuerdo de Maicol 1" loading="lazy">
+                        <div class="gallery-overlay">
+                            <i data-lucide="zoom-in"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-card" data-src="q.jpg">
+                        <img src="q.jpg" alt="Recuerdo de Maicol 2" loading="lazy">
+                        <div class="gallery-overlay">
+                            <i data-lucide="zoom-in"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-card" data-src="nh.jpg">
+                        <img src="nh.jpg" alt="Recuerdo de Maicol 3" loading="lazy">
+                        <div class="gallery-overlay">
+                            <i data-lucide="zoom-in"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-card" data-src="sw.jpg">
+                        <img src="sw.jpg" alt="Recuerdo de Maicol 4" loading="lazy">
+                        <div class="gallery-overlay">
+                            <i data-lucide="zoom-in"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-card" data-src="nv.jpg">
+                        <img src="nv.jpg" alt="Recuerdo de Maicol 5" loading="lazy">
+                        <div class="gallery-overlay">
+                            <i data-lucide="zoom-in"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-card" data-src="gk.jpg">
+                        <img src="gk.jpg" alt="Recuerdo de Maicol 6" loading="lazy">
+                        <div class="gallery-overlay">
+                            <i data-lucide="zoom-in"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-card" data-src="cf.jpg">
+                        <img src="cf.jpg" alt="Recuerdo de Maicol 7" loading="lazy">
+                        <div class="gallery-overlay">
+                            <i data-lucide="zoom-in"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-card" data-src="db.jpg">
+                        <img src="db.jpg" alt="Recuerdo de Maicol 8" loading="lazy">
+                        <div class="gallery-overlay">
+                            <i data-lucide="zoom-in"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE CARTA INTERACTIVA -->
+        <section id="carta" class="letter-section">
+            <div class="container letter-container">
+                <div class="section-header">
+                    <h2 class="section-title">Un Mensaje para Ti</h2>
+                    <p class="section-subtitle">Haz clic en la carta para desplegar nuestro mensaje especial.</p>
+                </div>
+
+                <div class="envelope-wrapper" id="envelope-wrapper">
+                    <div class="envelope" id="envelope">
+                        <div class="flap"></div>
+                        <div class="pocket"></div>
+                        <div class="letter" id="letter">
+                            <div class="letter-inner">
+                                <h3 class="letter-title">¡Feliz Cumpleaños, Hermano!</h3>
+                                <p><strong>Querido Maicol,</strong></p>
+                                <p>Es increíble cómo vuela el tiempo. Parece que fue ayer cuando compartíamos las aulas del colegio, las bromas en el recreo y los sueños del futuro.</p>
+                                <p>Hoy cumples 22 años, y nos da un orgullo inmenso ver en el gran hombre en el que te has convertido. No solo eres ese gran compañero y amigo leal, sino que has construido un camino maravilloso: un esposo dedicado y un padre ejemplar que da todo por su hijo.</p>
+                                <p>Te deseamos un día espectacular, lleno de risas, amor y la bendición de tu hermosa familia. Que la vida te siga sonriendo y cumplas todas las metas que te propongas.</p>
+                                <p class="signature">Tu amigo del colegio ✨</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="letter-hints">
+                    <span id="click-hint"><i data-lucide="mouse-pointer-click"></i> Haz clic en el sobre para abrir</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="container footer-content">
+                <p>Hecho con ❤️ para un gran amigo de la secundaria.</p>
+                <p class="copyright">&copy; 2026 - Celebrando a Maicol Dias Gil</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- LIGHTBOX PARA VER FOTOS EN GRANDE -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img" alt="">
+        <div class="lightbox-nav">
+            <button id="lightbox-prev" class="btn-nav"><i data-lucide="chevron-left"></i></button>
+            <button id="lightbox-next" class="btn-nav"><i data-lucide="chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- Script de control -->
+    <script src="script.js"></script>
+    <script>
+        // Inicializar los iconos de Lucide al cargar
+        lucide.createIcons();
+    </script>
+</body>
+</html>

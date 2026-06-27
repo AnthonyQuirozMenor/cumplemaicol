@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@100..900&family=Caveat:wght@400..700&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
@@ -18,6 +18,9 @@
     <!-- Canvas para el efecto de confeti -->
     <canvas id="confetti-canvas"></canvas>
 
+    <!-- Contenedor para globos flotantes interactivos -->
+    <div id="balloon-container" class="balloon-container"></div>
+
     <!-- PANTALLA DE BIENVENIDA (INTRO OVERLAY) -->
     <div id="intro-overlay" class="intro-overlay">
         <div class="intro-card">
@@ -25,9 +28,9 @@
                 <i data-lucide="mail-open" class="gold-icon pulse-animation"></i>
             </div>
             <h1 class="intro-title">Una Sorpresa Especial</h1>
-            <p class="intro-subtitle">Hemos preparado algo lindo para celebrar a un gran amigo.</p>
+            <p class="intro-subtitle">Hemos preparado algo muy lindo para celebrar a un gran amigo.</p>
             <button id="btn-entrar" class="btn-primary">
-                <span>Abrir Invitación</span>
+                <span>Abrir Felicitación</span>
                 <i data-lucide="sparkles"></i>
             </button>
         </div>
@@ -43,6 +46,7 @@
                 <div class="music-disc" id="music-disc">
                     <i data-lucide="music"></i>
                 </div>
+                <div class="disc-glow"></div>
             </div>
             <div class="music-text">
                 <span class="music-title">Son las 12 - Feliz Cumpleaños</span>
@@ -62,19 +66,20 @@
         </div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL (INICIALMENTE OCULTO HASTA CLIC EN ENTRAR) -->
+    <!-- CONTENIDO PRINCIPAL -->
     <main id="main-content" class="hidden">
         
         <!-- SECCIÓN HERO -->
         <section class="hero-section">
             <div class="hero-glow"></div>
+            <div class="floating-dust" id="floating-dust"></div>
             <div class="container hero-container">
                 <div class="hero-tag animate-item">
                     <i data-lucide="cake"></i>
                     <span>¡Hoy Cumple 22 Años!</span>
                 </div>
                 <h1 class="hero-title animate-item">Maicol Dias Gil</h1>
-                <p class="hero-subtitle animate-item">Compañero del colegio, gran amigo, esposo y padre. Celebrando un año más de vida y éxitos.</p>
+                <p class="hero-subtitle animate-item">Compañero del colegio, amigo de toda la vida, esposo ejemplar y padre cariñoso. Celebrando hoy 22 años de alegrías.</p>
                 
                 <div class="quick-facts animate-item">
                     <div class="fact-card">
@@ -102,6 +107,10 @@
                         <span>¡Lanzar Confeti!</span>
                         <i data-lucide="party-popper"></i>
                     </button>
+                    <button class="btn-accent" id="btn-spawn-balloons">
+                        <span>Soltar Globos</span>
+                        <i data-lucide="wind"></i>
+                    </button>
                 </div>
             </div>
         </section>
@@ -111,7 +120,7 @@
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">El Camino Recorrido</h2>
-                    <p class="section-subtitle">Recordando los momentos que han marcado estos 22 años de vida de Maicol.</p>
+                    <p class="section-subtitle">Un recorrido por las etapas que han hecho de Maicol el gran hombre que es hoy.</p>
                 </div>
 
                 <div class="timeline">
@@ -123,7 +132,7 @@
                         <div class="timeline-content card-glass">
                             <span class="timeline-tag">La Amistad</span>
                             <h3>El Compañero de Colegio</h3>
-                            <p>Compartimos las aulas, risas, exámenes y travesuras. Un amigo incondicional en el salón de clases, de esos que la escuela te regala para toda la vida.</p>
+                            <p>Compartimos aulas, risas, exámenes y anécdotas inolvidables. La secundaria nos unió y forjó una amistad sincera que perdura a través de los años.</p>
                         </div>
                     </div>
 
@@ -134,20 +143,20 @@
                         </div>
                         <div class="timeline-content card-glass">
                             <span class="timeline-tag">Compromiso</span>
-                            <h3>Un Nuevo Capítulo: El Matrimonio</h3>
-                            <p>El amor llegó para consolidar su camino. Tomó la decisión de dar un gran paso, casarse y empezar a construir un hogar sólido lleno de valores.</p>
+                            <h3>Un Nuevo Hogar: El Matrimonio</h3>
+                            <p>El amor llegó para consolidar su vida. Tomó la hermosa decisión de casarse y construir una familia basada en el respeto, amor y superación.</p>
                         </div>
                     </div>
 
                     <!-- Evento 3 -->
                     <div class="timeline-item">
                         <div class="timeline-dot">
-                            <i data-lucide="smile"></i>
+                            <i data-lucide="heart"></i>
                         </div>
                         <div class="timeline-content card-glass">
                             <span class="timeline-tag">Bendición</span>
-                            <h3>El Regalo de Ser Padre</h3>
-                            <p>La llegada de su hijo transformó su mundo por completo. Un motor diario, una luz que inspira a Maicol a superarse cada día y ser su mejor versión.</p>
+                            <h3>La Alegría de ser Padre</h3>
+                            <p>El nacimiento de su hijo trajo una nueva luz a su vida. Convertirse en padre es su mayor orgullo y el motor que lo impulsa a ser cada día mejor.</p>
                         </div>
                     </div>
 
@@ -159,7 +168,7 @@
                         <div class="timeline-content card-glass">
                             <span class="timeline-tag">Hoy</span>
                             <h3>¡Felices 22 Años!</h3>
-                            <p>Hoy celebra sus 22 años rodeado del cariño de su familia y la lealtad de sus amigos del colegio. ¡El futuro está lleno de oportunidades para seguir creciendo!</p>
+                            <p>Hoy celebra sus 22 años, siendo un gran ejemplo de amigo, esposo y papá. Que la vida te llene de bendiciones y éxitos. ¡Feliz cumpleaños, Maicol!</p>
                         </div>
                     </div>
                 </div>
@@ -171,58 +180,100 @@
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">Galería de Recuerdos</h2>
-                    <p class="section-subtitle">Momentos capturados que reflejan su alegría, familia y amistad.</p>
+                    <p class="section-subtitle">Momentos especiales grabados en fotos que capturan el camino de Maicol.</p>
                 </div>
 
                 <div class="gallery-grid">
-                    <div class="gallery-card" data-src="vv.jpg">
-                        <img src="vv.jpg" alt="Recuerdo de Maicol 1" loading="lazy">
-                        <div class="gallery-overlay">
-                            <i data-lucide="zoom-in"></i>
+                    <!-- Polaroid 1 -->
+                    <div class="gallery-card polaroid" data-src="vv.jpg">
+                        <div class="polaroid-img-wrapper">
+                            <img src="vv.jpg" alt="El día de su boda" loading="lazy">
+                        </div>
+                        <div class="polaroid-caption">El día de su boda 💍</div>
+                    </div>
+                    <!-- Polaroid 2 -->
+                    <div class="gallery-card polaroid" data-src="q.jpg">
+                        <div class="polaroid-img-wrapper">
+                            <img src="q.jpg" alt="Unidos por siempre" loading="lazy">
+                        </div>
+                        <div class="polaroid-caption">Unidos por siempre ❤️</div>
+                    </div>
+                    <!-- Polaroid 3 -->
+                    <div class="gallery-card polaroid" data-src="nh.jpg">
+                        <div class="polaroid-img-wrapper">
+                            <img src="nh.jpg" alt="La bendición de ser papá" loading="lazy">
+                        </div>
+                        <div class="polaroid-caption">La bendición de ser papá 👶</div>
+                    </div>
+                    <!-- Polaroid 4 -->
+                    <div class="gallery-card polaroid" data-src="sw.jpg">
+                        <div class="polaroid-img-wrapper">
+                            <img src="sw.jpg" alt="Amigos incondicionales" loading="lazy">
+                        </div>
+                        <div class="polaroid-caption">Amigos incondicionales 🎓</div>
+                    </div>
+                    <!-- Polaroid 5 -->
+                    <div class="gallery-card polaroid" data-src="nv.jpg">
+                        <div class="polaroid-img-wrapper">
+                            <img src="nv.jpg" alt="Compartiendo sonrisas" loading="lazy">
+                        </div>
+                        <div class="polaroid-caption">Compartiendo sonrisas ✨</div>
+                    </div>
+                    <!-- Polaroid 6 -->
+                    <div class="gallery-card polaroid" data-src="gk.jpg">
+                        <div class="polaroid-img-wrapper">
+                            <img src="gk.jpg" alt="Risas del colegio" loading="lazy">
+                        </div>
+                        <div class="polaroid-caption">Risas del colegio 🏫</div>
+                    </div>
+                    <!-- Polaroid 7 -->
+                    <div class="gallery-card polaroid" data-src="cf.jpg">
+                        <div class="polaroid-img-wrapper">
+                            <img src="cf.jpg" alt="La familia primero" loading="lazy">
+                        </div>
+                        <div class="polaroid-caption">La familia primero 🏡</div>
+                    </div>
+                    <!-- Polaroid 8 -->
+                    <div class="gallery-card polaroid" data-src="db.jpg">
+                        <div class="polaroid-img-wrapper">
+                            <img src="db.jpg" alt="22 años de felicidad" loading="lazy">
+                        </div>
+                        <div class="polaroid-caption">22 años de felicidad 🎉</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN INTERACTIVA DE CUMPLEAÑOS (PASTEL Y VELAS) -->
+        <section class="cake-section">
+            <div class="container cake-container">
+                <div class="section-header">
+                    <h2 class="section-title">¡Apaga las Velas!</h2>
+                    <p class="section-subtitle">Haz clic en las velas del pastel para pedir un deseo.</p>
+                </div>
+                
+                <div class="cake-wrapper">
+                    <div class="cake">
+                        <div class="plate"></div>
+                        <div class="layer layer-bottom"></div>
+                        <div class="layer layer-middle"></div>
+                        <div class="layer layer-top"></div>
+                        <div class="icing"></div>
+                        <div class="drips"></div>
+                        <!-- Velas -->
+                        <div class="candles-container">
+                            <div class="candle" id="candle-1">
+                                <div class="flame"></div>
+                            </div>
+                            <div class="candle" id="candle-2">
+                                <div class="flame"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="gallery-card" data-src="q.jpg">
-                        <img src="q.jpg" alt="Recuerdo de Maicol 2" loading="lazy">
-                        <div class="gallery-overlay">
-                            <i data-lucide="zoom-in"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-card" data-src="nh.jpg">
-                        <img src="nh.jpg" alt="Recuerdo de Maicol 3" loading="lazy">
-                        <div class="gallery-overlay">
-                            <i data-lucide="zoom-in"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-card" data-src="sw.jpg">
-                        <img src="sw.jpg" alt="Recuerdo de Maicol 4" loading="lazy">
-                        <div class="gallery-overlay">
-                            <i data-lucide="zoom-in"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-card" data-src="nv.jpg">
-                        <img src="nv.jpg" alt="Recuerdo de Maicol 5" loading="lazy">
-                        <div class="gallery-overlay">
-                            <i data-lucide="zoom-in"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-card" data-src="gk.jpg">
-                        <img src="gk.jpg" alt="Recuerdo de Maicol 6" loading="lazy">
-                        <div class="gallery-overlay">
-                            <i data-lucide="zoom-in"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-card" data-src="cf.jpg">
-                        <img src="cf.jpg" alt="Recuerdo de Maicol 7" loading="lazy">
-                        <div class="gallery-overlay">
-                            <i data-lucide="zoom-in"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-card" data-src="db.jpg">
-                        <img src="db.jpg" alt="Recuerdo de Maicol 8" loading="lazy">
-                        <div class="gallery-overlay">
-                            <i data-lucide="zoom-in"></i>
-                        </div>
-                    </div>
+                </div>
+                
+                <div class="cake-status" id="cake-status">
+                    <span>🕯️ Haz clic en cada flama para apagarlas</span>
                 </div>
             </div>
         </section>
@@ -239,12 +290,15 @@
                     <div class="envelope" id="envelope">
                         <div class="flap"></div>
                         <div class="pocket"></div>
+                        <div class="wax-seal" id="wax-seal">
+                            <i data-lucide="heart"></i>
+                        </div>
                         <div class="letter" id="letter">
                             <div class="letter-inner">
                                 <h3 class="letter-title">¡Feliz Cumpleaños, Hermano!</h3>
                                 <p><strong>Querido Maicol,</strong></p>
                                 <p>Es increíble cómo vuela el tiempo. Parece que fue ayer cuando compartíamos las aulas del colegio, las bromas en el recreo y los sueños del futuro.</p>
-                                <p>Hoy cumples 22 años, y nos da un orgullo inmenso ver en el gran hombre en el que te has convertido. No solo eres ese gran compañero y amigo leal, sino que has construido un camino maravilloso: un esposo dedicado y un padre ejemplar que da todo por su hijo.</p>
+                                <p>Hoy cumples 22 años, y nos da un orgullo inmenso ver el gran hombre en el que te has convertido. No solo eres ese gran compañero y amigo leal, sino que has construido un camino maravilloso: un esposo dedicado y un padre ejemplar que da todo por su hijo.</p>
                                 <p>Te deseamos un día espectacular, lleno de risas, amor y la bendición de tu hermosa familia. Que la vida te siga sonriendo y cumplas todas las metas que te propongas.</p>
                                 <p class="signature">Tu amigo del colegio ✨</p>
                             </div>

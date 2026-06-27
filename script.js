@@ -1,6 +1,6 @@
 /*
    ==========================================================================
-   INTERACCIONES DINÁMICAS - WEB TRIBUTO DE CUMPLEAÑOS DE MAICOL
+   INTERACCIONES DINÁMICAS MEJORADAS - WEB TRIBUTO DE CUMPLEAÑOS DE MAICOL
    ==========================================================================
 */
 
@@ -16,7 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicDisc = document.getElementById('music-disc');
     const playIcon = document.getElementById('play-icon');
     const btnBurstConfetti = document.getElementById('btn-burst-confetti');
+    const btnSpawnBalloons = document.getElementById('btn-spawn-balloons');
+    const balloonContainer = document.getElementById('balloon-container');
     
+    // Cake & Candles variables
+    const candles = document.querySelectorAll('.candle');
+    const cakeStatus = document.getElementById('cake-status');
+    let extinguishedCount = 0;
+
+    // Envelope & Letter variables
     const envelopeWrapper = document.getElementById('envelope-wrapper');
     const clickHint = document.getElementById('click-hint');
     
@@ -50,7 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
         '#ffffff', // Blanco brillo
         '#e2e8f0', // Plata suave
         '#ffd700', // Oro puro
-        '#ffaa00'  // Naranja festivo
+        '#ff4757', // Coral vivo
+        '#ff6b81', // Rosa
+        '#2ed573'  // Verde festivo
     ];
 
     function resizeCanvas() {
@@ -61,18 +71,18 @@ document.addEventListener('DOMContentLoaded', () => {
     resizeCanvas();
 
     class ConfettiParticle {
-        constructor(x, y, isBurst = false) {
+        constructor(x, y, isBurst = false, customColor = null) {
             this.x = x;
             this.y = y;
             this.size = Math.random() * 8 + 4;
-            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.color = customColor || colors[Math.floor(Math.random() * colors.length)];
             
             if (isBurst) {
                 // Dirección radial para explosiones
                 const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 8 + 3;
+                const speed = Math.random() * 8 + 4;
                 this.speedX = Math.cos(angle) * speed;
-                this.speedY = Math.sin(angle) * speed - Math.random() * 4; // Impulso hacia arriba
+                this.speedY = Math.sin(angle) * speed - Math.random() * 3; // Impulso hacia arriba
             } else {
                 // Caída natural
                 this.speedX = Math.random() * 2 - 1;
@@ -82,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.rotation = Math.random() * 360;
             this.rotationSpeed = Math.random() * 10 - 5;
             this.opacity = 1;
-            this.fadeSpeed = isBurst ? Math.random() * 0.015 + 0.005 : 0;
+            this.fadeSpeed = isBurst ? Math.random() * 0.015 + 0.008 : 0;
         }
 
         update() {
@@ -109,58 +119,48 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.rotate((this.rotation * Math.PI) / 180);
             ctx.globalAlpha = this.opacity;
             ctx.fillStyle = this.color;
-            
-            // Dibujar forma rectangular/rombo de confeti
             ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size / 1.5);
-            
             ctx.restore();
         }
     }
 
     function initConfetti() {
-        // Crear confeti de fondo inicial (caída continua)
         for (let i = 0; i < 70; i++) {
             confetti.push(new ConfettiParticle(Math.random() * canvas.width, Math.random() * canvas.height));
         }
     }
 
-    function burstConfetti(count, x = canvas.width / 2, y = canvas.height / 2) {
+    function burstConfetti(count, x = canvas.width / 2, y = canvas.height / 2, customColor = null) {
         for (let i = 0; i < count; i++) {
-            confetti.push(new ConfettiParticle(x, y, true));
+            confetti.push(new ConfettiParticle(x, y, true, customColor));
         }
     }
 
     function animateConfetti() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Filtrar partículas desvanecidas
         confetti = confetti.filter(p => p.opacity > 0);
-        
         confetti.forEach(p => {
             p.update();
             p.draw();
         });
-        
         requestAnimationFrame(animateConfetti);
     }
 
     // --- ACCIÓN DE ENTRADA (BIENVENIDA) ---
     btnEntrar.addEventListener('click', () => {
-        // Reproducir música
         playMusic();
-        
-        // Ocultar Overlay con animación
         introOverlay.classList.add('fade-out');
-        
-        // Mostrar contenido
         mainContent.classList.remove('hidden');
         musicWidget.classList.remove('hidden');
         
-        // Lanzar lluvia masiva de confeti de celebración
         initConfetti();
         burstConfetti(120, canvas.width / 2, canvas.height * 0.7);
         
-        // Activar animaciones iniciales en scroll
+        // Spawnear globos de bienvenida con un pequeño retraso
+        setTimeout(() => {
+            spawnBalloons(8);
+        }, 1000);
+
         setTimeout(() => {
             triggerAnimations();
         }, 100);
@@ -198,11 +198,106 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Burst confetti manual
-    btnBurstConfetti.addEventListener('click', (e) => {
+    btnBurstConfetti.addEventListener('click', () => {
         const rect = btnBurstConfetti.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
-        burstConfetti(80, x, y);
+        burstConfetti(85, x, y);
+    });
+
+    // --- GENERADOR DE GLOBOS FLOTANTES ---
+    const balloonColors = [
+        '#ff4757', // Coral
+        '#ffa502', // Naranja
+        '#1e90ff', // Azul brillante
+        '#ff6b81', // Rosa
+        '#70a1ff', // Celeste
+        '#dfb76c', // Oro
+        '#9b59b6'  // Púrpura
+    ];
+
+    function spawnBalloons(count) {
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                createBalloon();
+            }, i * 350);
+        }
+    }
+
+    function createBalloon() {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        
+        const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+        balloon.style.backgroundColor = color;
+        balloon.style.color = color;
+        
+        // Posición horizontal y animación randomizada
+        const leftPos = Math.random() * 85 + 5; // Evitar bordes extremos
+        balloon.style.left = `${leftPos}%`;
+        
+        const speed = Math.random() * 4 + 6; // Entre 6 y 10 segundos
+        balloon.style.animationDuration = `${speed}s`;
+        
+        // Hilo
+        const string = document.createElement('div');
+        string.className = 'balloon-string';
+        balloon.appendChild(string);
+        
+        // Evento de hacer click (explotar el globo)
+        balloon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            // Sonido de explosión visual (confeti del mismo color que el globo)
+            const rect = balloon.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            burstConfetti(25, x, y, color);
+            
+            // Eliminar elemento del DOM
+            balloon.remove();
+        });
+        
+        // Eliminar del DOM una vez que termina de flotar
+        balloon.addEventListener('animationend', () => {
+            balloon.remove();
+        });
+        
+        balloonContainer.appendChild(balloon);
+    }
+
+    btnSpawnBalloons.addEventListener('click', () => {
+        spawnBalloons(10);
+    });
+
+    // --- INTERACCIÓN DE PASTEL Y VELAS ---
+    candles.forEach((candle) => {
+        candle.addEventListener('click', () => {
+            if (!candle.classList.contains('extinguished')) {
+                candle.classList.add('extinguished');
+                extinguishedCount++;
+                
+                // Pequeña explosión de humo/confeti dorado arriba de la vela
+                const rect = candle.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top;
+                burstConfetti(15, x, y, '#e2e8f0');
+                
+                // Validar si todas están apagadas
+                if (extinguishedCount === candles.length) {
+                    cakeStatus.innerHTML = '🎉 ¡Felicidades! Pediste un deseo ✨';
+                    cakeStatus.style.borderColor = 'var(--gold-primary)';
+                    cakeStatus.style.color = 'var(--gold-light)';
+                    
+                    // Celebración masiva de deseos cumplidos
+                    setTimeout(() => {
+                        const cakeRect = document.querySelector('.cake').getBoundingClientRect();
+                        burstConfetti(100, cakeRect.left + cakeRect.width / 2, cakeRect.top);
+                        spawnBalloons(8);
+                    }, 500);
+                }
+            }
+        });
     });
 
     // --- CONTROL DE LA CARTA INTERACTIVA ---
@@ -215,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Explosión de confeti desde el sobre
             const rect = envelopeWrapper.getBoundingClientRect();
-            burstConfetti(40, rect.left + rect.width / 2, rect.top + rect.height / 3);
+            burstConfetti(45, rect.left + rect.width / 2, rect.top + rect.height / 3);
         } else {
             envelopeWrapper.classList.remove('open');
             clickHint.innerHTML = '<i data-lucide="mouse-pointer-click"></i> Haz clic en el sobre para abrir';
@@ -229,12 +324,12 @@ document.addEventListener('DOMContentLoaded', () => {
         currentImageIndex = index;
         lightboxImg.src = galleryImages[currentImageIndex];
         lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Bloquear scroll de fondo
+        document.body.style.overflow = 'hidden'; 
     }
 
     function closeLightbox() {
         lightbox.classList.remove('active');
-        document.body.style.overflow = ''; // Habilitar scroll
+        document.body.style.overflow = ''; 
     }
 
     function navigateGallery(direction) {
@@ -244,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     lightboxClose.addEventListener('click', closeLightbox);
     
-    // Cerrar al hacer clic en el fondo del lightbox
     lightbox.addEventListener('click', (e) => {
         if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
             if (e.target !== lightboxImg && e.target !== btnPrev && e.target !== btnNext) {
@@ -263,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navigateGallery(1);
     });
 
-    // Atajos de teclado para Lightbox
+    // Atajos de teclado
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('active')) return;
         
@@ -290,7 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (entry.isIntersecting) {
                     if (entry.target.classList.contains('timeline-item')) {
                         entry.target.classList.add('appear');
-                        // Efecto confeti sutil al revelar la tarjeta de cumpleaños de 22 años
                         if (entry.target.querySelector('.timeline-tag')?.textContent === 'HOY') {
                             const rect = entry.target.getBoundingClientRect();
                             burstConfetti(25, rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -307,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
             observer.observe(item);
         });
         
-        // Agregar clases para retrasos secuenciales de elementos iniciales
+        // Animaciones iniciales secuenciales
         const heroItems = document.querySelectorAll('.hero-section .animate-item');
         heroItems.forEach((item, index) => {
             item.style.transitionDelay = `${index * 0.15}s`;
@@ -315,6 +408,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Iniciar loop de confeti
     animateConfetti();
 });
